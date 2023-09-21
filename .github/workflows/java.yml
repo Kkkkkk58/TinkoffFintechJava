@@ -14,8 +14,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Get into project folder
-        run: cd fintech
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
@@ -25,5 +23,6 @@ jobs:
           build-root-directory: fintech
       - name: Build and run fatJar
         run: |
+          cd fintech
           ./gradlew fatJar
           java -jar build/libs/fintech-fat-jar-1.0-SNAPSHOT.jar
