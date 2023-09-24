@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.kslacker.fintech.dataaccess.api.WeatherRepository;
 import ru.kslacker.fintech.models.Weather;
-import ru.kslacker.fintech.service.api.WeatherService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class WeatherServiceImplTest {
     @Mock
     private WeatherRepository weatherRepository;
-    private WeatherService service;
+    private WeatherServiceImpl service;
 
     @BeforeEach
     void init() {
