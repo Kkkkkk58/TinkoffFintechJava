@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class WeatherServiceImplTest {
-    @Mock private WeatherRepository weatherRepository;
+    @Mock
+    private WeatherRepository weatherRepository;
     private WeatherService service;
 
     @BeforeEach
@@ -41,10 +41,12 @@ public class WeatherServiceImplTest {
 
         Map<UUID, Double> result = service.getAverageByRegions();
 
-        assertTrue(result.containsKey(region1));
-        assertEquals(1, result.get(region1));
-        assertTrue(result.containsKey(region2));
-        assertEquals(-3, result.get(region2));
+        assertAll(
+                () -> assertTrue(result.containsKey(region1)),
+                () -> assertEquals(1, result.get(region1)),
+                () -> assertTrue(result.containsKey(region2)),
+                () -> assertEquals(-3, result.get(region2))
+        );
     }
 
     @Test
