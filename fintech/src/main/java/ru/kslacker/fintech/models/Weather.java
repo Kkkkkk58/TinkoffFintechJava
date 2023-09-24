@@ -13,6 +13,6 @@ import java.util.UUID;
 public class Weather {
     private UUID regionId;
     private String regionName;
-    private int temperatureValue;
+    private double temperatureValue;
     private LocalDateTime dateTime;
 }

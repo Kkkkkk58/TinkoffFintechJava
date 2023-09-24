@@ -19,26 +19,26 @@ public class WeatherServiceImpl {
         return weatherRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Weather::getRegionId,
-                        Collectors.averagingInt(Weather::getTemperatureValue)));
+                        Collectors.averagingDouble(Weather::getTemperatureValue)));
     }
 
-    public List<UUID> getRegionsWithTemperatureAbove(int temperature) {
+    public List<UUID> getRegionsWithTemperatureAbove(double temperature) {
         return weatherRepository.findAll()
                 .stream()
-                .filter(weather -> weather.getTemperatureValue() > temperature)
+                .filter(weather -> Double.compare(weather.getTemperatureValue(), temperature) > 0)
                 .map(Weather::getRegionId)
                 .distinct()
                 .toList();
     }
 
-    public Map<UUID, List<Integer>> getMapWithId() {
+    public Map<UUID, List<Double>> getMapWithId() {
         return weatherRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Weather::getRegionId,
                         Collectors.mapping(Weather::getTemperatureValue, Collectors.toList())));
     }
 
-    public Map<Integer, List<Weather>> getMapWithTemperature() {
+    public Map<Double, List<Weather>> getMapWithTemperature() {
         return weatherRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(Weather::getTemperatureValue));
