@@ -1,0 +1,160 @@
+openapi: 3.0.1
+info:
+  title: Weather API
+  description: API for the service providing weather for cities
+  version: 0.0.1
+tags:
+- name: CityWeather
+  description: Controller for city weather information management
+paths:
+  /api/weather/{cityId}:
+    get:
+      tags:
+      - CityWeather
+      operationId: getWeather
+      parameters:
+      - name: cityId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeatherDto'
+        "404":
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+      - CityWeather
+      operationId: updateWeather
+      parameters:
+      - name: cityId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWeatherDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+      - CityWeather
+      operationId: createCity
+      parameters:
+      - name: cityId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCityDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+        "409":
+          description: City already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - CityWeather
+      operationId: deleteCity
+      parameters:
+      - name: cityId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CreateWeatherDto:
+      type: object
+      properties:
+        temperatureValue:
+          type: number
+          format: double
+        dateTime:
+          type: string
+          format: date-time
+    CreateCityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateWeatherDto'
+    WeatherDto:
+      type: object
+      properties:
+        cityId:
+          type: string
+          format: uuid
+        cityName:
+          type: string
+        temperatureValue:
+          type: number
+          format: double
+        dateTime:
+          type: string
+          format: date-time
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
