@@ -1,3 +1,9 @@
-*
+/*
 !README.md
 !.gitignore
+!/fintech/
+/fintech/.gradle
+/fintech/.idea
+/fintech/build
+/fintech/bin
+!/.github/
