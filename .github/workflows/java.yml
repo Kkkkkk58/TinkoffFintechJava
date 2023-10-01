@@ -1,8 +1,8 @@
 name: Java
 
 on:
-  push:
-    branches: [ "hw-2" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -21,8 +21,3 @@ jobs:
         with:
           arguments: build
           build-root-directory: fintech
-      - name: Build and run fatJar
-        run: |
-          cd fintech
-          ./gradlew fatJar
-          java -jar build/libs/fintech-fat-jar-1.0-SNAPSHOT.jar
