@@ -8,25 +8,25 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class WeatherServiceImpl {
+public class WeatherStatisticsService {
     private final WeatherRepository weatherRepository;
 
-    public WeatherServiceImpl(WeatherRepository weatherRepository) {
+    public WeatherStatisticsService(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
     }
 
-    public Map<UUID, Double> getAverageByRegions() {
+    public Map<UUID, Double> getAverageByCities() {
         return weatherRepository.findAll()
                 .stream()
-                .collect(Collectors.groupingBy(Weather::getRegionId,
+                .collect(Collectors.groupingBy(Weather::getCityId,
                         Collectors.averagingDouble(Weather::getTemperatureValue)));
     }
 
-    public List<UUID> getRegionsWithTemperatureAbove(double temperature) {
+    public List<UUID> getCitiesWithTemperatureAbove(double temperature) {
         return weatherRepository.findAll()
                 .stream()
                 .filter(weather -> Double.compare(weather.getTemperatureValue(), temperature) > 0)
-                .map(Weather::getRegionId)
+                .map(Weather::getCityId)
                 .distinct()
                 .toList();
     }
@@ -34,7 +34,7 @@ public class WeatherServiceImpl {
     public Map<UUID, List<Double>> getMapWithId() {
         return weatherRepository.findAll()
                 .stream()
-                .collect(Collectors.groupingBy(Weather::getRegionId,
+                .collect(Collectors.groupingBy(Weather::getCityId,
                         Collectors.mapping(Weather::getTemperatureValue, Collectors.toList())));
     }
 

@@ -11,8 +11,8 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class Weather {
-    private UUID regionId;
-    private String regionName;
+    private UUID cityId;
+    private String cityName;
     private double temperatureValue;
     private LocalDateTime dateTime;
 }
