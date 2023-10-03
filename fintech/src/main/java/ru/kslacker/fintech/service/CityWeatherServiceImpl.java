@@ -1,6 +1,6 @@
 package ru.kslacker.fintech.service;
 
-import lombok.experimental.ExtensionMethod;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.kslacker.fintech.dataaccess.api.CityRepository;
 import ru.kslacker.fintech.dataaccess.api.WeatherRepository;
@@ -18,24 +18,18 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@ExtensionMethod({WeatherMapper.class})
+@AllArgsConstructor
 public class CityWeatherServiceImpl implements CityWeatherService {
     private final WeatherRepository weatherRepository;
     private final CityRepository cityRepository;
     private final ValidationService validator;
-
-    public CityWeatherServiceImpl(WeatherRepository weatherRepository, CityRepository cityRepository, ValidationService validator) {
-        this.weatherRepository = weatherRepository;
-        this.cityRepository = cityRepository;
-        this.validator = validator;
-    }
 
     @Override
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
         return weatherRepository
                 .getByCityAndDate(cityId, date)
                 .stream()
-                .map(w -> w.asDto())
+                .map(WeatherMapper::asDto)
                 .toList();
     }
 
