@@ -4,27 +4,27 @@ info:
   description: API for the service providing weather for cities
   version: 0.0.1
 tags:
-- name: CityWeather
-  description: Controller for city weather information management
+  - name: CityWeather
+    description: Controller for city weather information management
 paths:
   /api/weather/{cityId}:
     get:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: getWeather
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: date
-        in: query
-        required: true
-        schema:
-          type: string
-          format: date
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: OK
@@ -43,15 +43,15 @@ paths:
 
     put:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: updateWeather
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -69,15 +69,15 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: createCity
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -101,15 +101,15 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: deleteCity
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: OK
