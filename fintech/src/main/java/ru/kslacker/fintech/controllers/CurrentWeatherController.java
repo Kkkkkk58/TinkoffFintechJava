@@ -17,7 +17,7 @@ public class CurrentWeatherController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping(produces = "application/json")
     @RateLimiter(name = "remote-weather-service")
     public FullWeatherInfoDto getCurrentWeather(@RequestParam String location) {
         return service.getCurrentWeather(location);
