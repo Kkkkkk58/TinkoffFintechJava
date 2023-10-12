@@ -24,6 +24,10 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     private final CityRepository cityRepository;
     private final ValidationService validator;
 
+    private static Weather createWeather(UUID cityId, String cityName, CreateWeatherDto w) {
+        return new Weather(cityId, cityName, w.temperatureValue(), w.dateTime());
+    }
+
     @Override
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
         return weatherRepository
@@ -56,9 +60,5 @@ public class CityWeatherServiceImpl implements CityWeatherService {
 
     private List<Weather> createWeatherList(City city, List<CreateWeatherDto> weather) {
         return weather.stream().map(w -> createWeather(city.getId(), city.getName(), w)).toList();
-    }
-
-    private static Weather createWeather(UUID cityId, String cityName, CreateWeatherDto w) {
-        return new Weather(cityId, cityName, w.temperatureValue(), w.dateTime());
     }
 }

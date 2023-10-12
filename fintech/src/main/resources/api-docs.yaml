@@ -4,27 +4,29 @@ info:
   description: API for the service providing weather for cities
   version: 0.0.1
 tags:
-- name: CityWeather
-  description: Controller for city weather information management
+  - name: CityWeather
+    description: Controller for city weather information management
+  - name: CurrentWeather
+    description: Getting current weather for location
 paths:
   /api/weather/{cityId}:
     get:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: getWeather
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: date
-        in: query
-        required: true
-        schema:
-          type: string
-          format: date
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: OK
@@ -43,15 +45,15 @@ paths:
 
     put:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: updateWeather
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -69,15 +71,15 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: createCity
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -101,20 +103,50 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
     delete:
       tags:
-      - CityWeather
+        - CityWeather
       operationId: deleteCity
       parameters:
-      - name: cityId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: cityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: OK
         "404":
           description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/weather/current:
+    get:
+      tags:
+        - CurrentWeather
+      operationId: getCurrentWeather
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/FullWeatherInfoDto'
+        "404":
+          description: Location not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad request
           content:
             application/json:
               schema:
@@ -158,3 +190,290 @@ components:
       properties:
         message:
           type: string
+    AirQualityDto:
+      type: object
+      properties:
+        pm2_5:
+          type: number
+          format: double
+        us-epa-index:
+          type: integer
+          format: int32
+        gb-defra-index:
+          type: integer
+          format: int32
+        co:
+          type: number
+          format: double
+        no2:
+          type: number
+          format: double
+        o3:
+          type: number
+          format: double
+        so2:
+          type: integer
+          format: int32
+        pm10:
+          type: integer
+          format: int32
+    ConditionDto:
+      type: object
+      properties:
+        icon:
+          type: string
+        text:
+          type: string
+        code:
+          type: integer
+          format: int32
+    CurrentWeatherDto:
+      type: object
+      properties:
+        last_updated_epoch:
+          type: integer
+          format: int32
+        last_updated:
+          type: string
+          format: date-time
+        temp_c:
+          type: number
+          format: double
+        temp_f:
+          type: number
+          format: double
+        is_day:
+          type: integer
+          format: int32
+        wind_mph:
+          type: number
+          format: double
+        wind_kph:
+          type: number
+          format: double
+        wind_degree:
+          type: integer
+          format: int32
+        wind_dir:
+          type: string
+        pressure_mb:
+          type: integer
+          format: int32
+        pressure_in:
+          type: number
+          format: double
+        precip_mm:
+          type: integer
+          format: int32
+        precip_in:
+          type: integer
+          format: int32
+        feelslike_c:
+          type: integer
+          format: int32
+        feelslike_f:
+          type: integer
+          format: int32
+        vis_km:
+          type: integer
+          format: int32
+        vis_miles:
+          type: integer
+          format: int32
+        gust_mph:
+          type: number
+          format: double
+        gust_kph:
+          type: number
+          format: double
+        air_quality:
+          $ref: '#/components/schemas/AirQualityDto'
+        condition:
+          $ref: '#/components/schemas/ConditionDto'
+        humidity:
+          type: integer
+          format: int32
+        cloud:
+          type: integer
+          format: int32
+        uv:
+          type: integer
+          format: int32
+    FullWeatherInfoDto:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/LocationDto'
+        current:
+          $ref: '#/components/schemas/CurrentWeatherDto'
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
+    LocationDto:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+        tz_id:
+          type: object
+          properties:
+            id:
+              type: string
+            rules:
+              type: object
+              properties:
+                transitions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      offsetBefore:
+                        type: object
+                        properties:
+                          totalSeconds:
+                            type: integer
+                            format: int32
+                          id:
+                            type: string
+                      offsetAfter:
+                        type: object
+                        properties:
+                          totalSeconds:
+                            type: integer
+                            format: int32
+                          id:
+                            type: string
+                      duration:
+                        type: object
+                        properties:
+                          seconds:
+                            type: integer
+                            format: int64
+                          nano:
+                            type: integer
+                            format: int32
+                          zero:
+                            type: boolean
+                          negative:
+                            type: boolean
+                          units:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                durationEstimated:
+                                  type: boolean
+                                dateBased:
+                                  type: boolean
+                                timeBased:
+                                  type: boolean
+                      instant:
+                        type: string
+                        format: date-time
+                      overlap:
+                        type: boolean
+                      gap:
+                        type: boolean
+                      dateTimeBefore:
+                        type: string
+                        format: date-time
+                      dateTimeAfter:
+                        type: string
+                        format: date-time
+                transitionRules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      month:
+                        type: string
+                        enum:
+                          - JANUARY
+                          - FEBRUARY
+                          - MARCH
+                          - APRIL
+                          - MAY
+                          - JUNE
+                          - JULY
+                          - AUGUST
+                          - SEPTEMBER
+                          - OCTOBER
+                          - NOVEMBER
+                          - DECEMBER
+                      timeDefinition:
+                        type: string
+                        enum:
+                          - UTC
+                          - WALL
+                          - STANDARD
+                      standardOffset:
+                        type: object
+                        properties:
+                          totalSeconds:
+                            type: integer
+                            format: int32
+                          id:
+                            type: string
+                      offsetBefore:
+                        type: object
+                        properties:
+                          totalSeconds:
+                            type: integer
+                            format: int32
+                          id:
+                            type: string
+                      offsetAfter:
+                        type: object
+                        properties:
+                          totalSeconds:
+                            type: integer
+                            format: int32
+                          id:
+                            type: string
+                      dayOfWeek:
+                        type: string
+                        enum:
+                          - MONDAY
+                          - TUESDAY
+                          - WEDNESDAY
+                          - THURSDAY
+                          - FRIDAY
+                          - SATURDAY
+                          - SUNDAY
+                      dayOfMonthIndicator:
+                        type: integer
+                        format: int32
+                      localTime:
+                        $ref: '#/components/schemas/LocalTime'
+                      midnightEndOfDay:
+                        type: boolean
+                fixedOffset:
+                  type: boolean
+        localtime_epoch:
+          type: integer
+          format: int32
+        name:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+        localtime:
+          type: string
+          format: date-time
