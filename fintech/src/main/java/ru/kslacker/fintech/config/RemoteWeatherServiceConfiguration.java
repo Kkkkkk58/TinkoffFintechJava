@@ -20,11 +20,6 @@ public class RemoteWeatherServiceConfiguration {
     }
 
     @Bean
-    public RemoteWeatherServiceStatusHandler remoteWeatherServiceStatusHandler() {
-        return new RemoteWeatherServiceStatusHandler();
-    }
-
-    @Bean
     public WebClient remoteWeatherServiceWebClient(RemoteWeatherServiceStatusHandler statusHandler) {
         ExchangeFilterFunction errorResponseFilter = ExchangeFilterFunction
                 .ofResponseProcessor(statusHandler::exchangeFilterResponseProcessor);

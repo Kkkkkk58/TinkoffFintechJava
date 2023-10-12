@@ -2,12 +2,14 @@ package ru.kslacker.fintech.middleware;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 import ru.kslacker.fintech.dto.RemoteErrorBodyDto;
 import ru.kslacker.fintech.dto.RemoteErrorDto;
 import ru.kslacker.fintech.exceptions.*;
 
+@Component
 public class RemoteWeatherServiceStatusHandler {
 
     public Mono<ClientResponse> exchangeFilterResponseProcessor(ClientResponse response) {
