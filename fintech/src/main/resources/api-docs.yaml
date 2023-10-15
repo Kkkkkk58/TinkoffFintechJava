@@ -72,7 +72,7 @@ paths:
     post:
       tags:
         - CityWeather
-      operationId: createCity
+      operationId: save
       parameters:
         - name: cityId
           in: path
@@ -90,7 +90,7 @@ paths:
         "200":
           description: OK
         "409":
-          description: City already exists
+          description: City already existsById
           content:
             application/json:
               schema:
@@ -156,6 +156,16 @@ components:
     CreateWeatherDto:
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - CLEAR
+            - RAIN
+            - CLOUDS
+            - THUNDERSTORM
+            - DRIZZLE
+            - SNOW
+            - FOG
         temperatureValue:
           type: number
           format: double
@@ -179,12 +189,29 @@ components:
           format: uuid
         cityName:
           type: string
+        type:
+          $ref: '#/components/schemas/WeatherTypeInfoDto'
         temperatureValue:
           type: number
           format: double
         dateTime:
           type: string
           format: date-time
+    WeatherTypeInfoDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - CLEAR
+            - RAIN
+            - CLOUDS
+            - THUNDERSTORM
+            - DRIZZLE
+            - SNOW
+            - FOG
+        iconUrl:
+          type: string
     ErrorResponse:
       type: object
       properties:

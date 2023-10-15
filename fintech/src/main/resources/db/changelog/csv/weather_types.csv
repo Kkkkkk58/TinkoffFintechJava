@@ -1,0 +1,8 @@
+ID,TYPE,ICON_URL
+1,CLEAR,http://openweathermap.org/img/wn/01d@2x.png
+2,RAIN,http://openweathermap.org/img/wn/10d@2x.png
+3,CLOUDS,http://openweathermap.org/img/wn/03d@2x.png
+4,THUNDERSTORM,http://openweathermap.org/img/wn/11d@2x.png
+5,DRIZZLE,http://openweathermap.org/img/wn/10d@2x.png
+6,SNOW,http://openweathermap.org/img/wn/13d@2x.png
+7,FOG,http://openweathermap.org/img/wn/50d@2x.png

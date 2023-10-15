@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="1697392634000" author="KarimKhasan">
+        <loadData tableName="cities" file="db/changelog/csv/cities.csv"/>
+        <loadData tableName="weather_type" file="db/changelog/csv/weather_types.csv"/>
+    </changeSet>
+</databaseChangeLog>
