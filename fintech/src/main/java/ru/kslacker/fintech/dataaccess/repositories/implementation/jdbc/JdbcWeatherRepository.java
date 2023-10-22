@@ -19,10 +19,13 @@ import java.util.UUID;
 public class JdbcWeatherRepository implements WeatherRepository {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Weather> rowMapper;
-    private final String selectWeatherStatement = "SELECT W.*, C.NAME AS CITY_NAME, WT.TYPE AS WEATHER_TYPE, WT.ICON_URL AS ICON_URL" +
-            " FROM WEATHER W " +
-            "JOIN WEATHER_TYPE WT on WT.ID = W.TYPE_ID " +
-            "JOIN CITIES C on C.ID = W.CITY_ID";
+    private final String selectWeatherStatement =
+            """
+            SELECT W.*, C.NAME AS CITY_NAME, WT.TYPE AS WEATHER_TYPE, WT.ICON_URL AS ICON_URL
+            FROM WEATHER W
+            JOIN WEATHER_TYPE WT on WT.ID = W.TYPE_ID
+            JOIN CITIES C on C.ID = W.CITY_ID
+            """;
 
     public JdbcWeatherRepository(JdbcTemplate jdbcTemplate, RowMapper<Weather> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
