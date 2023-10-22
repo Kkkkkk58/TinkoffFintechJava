@@ -20,7 +20,8 @@ public class Weather {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id = UUID.randomUUID();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private City city;
 
     @ManyToOne

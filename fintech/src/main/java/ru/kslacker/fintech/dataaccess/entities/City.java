@@ -22,7 +22,7 @@ public class City {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Weather> weather = new ArrayList<>();
 
@@ -31,6 +31,13 @@ public class City {
         this.name = name;
     }
 
+    public void addWeather(Weather w) {
+        weather.add(w);
+    }
+
+    public void deleteWeather(Weather w) {
+        weather.remove(w);
+    }
 
     @Override
     public boolean equals(Object o) {
