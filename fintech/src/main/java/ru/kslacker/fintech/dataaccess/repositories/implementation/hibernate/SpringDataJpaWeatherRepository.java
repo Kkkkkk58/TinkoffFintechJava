@@ -16,6 +16,7 @@ import java.util.UUID;
 @Primary
 public interface SpringDataJpaWeatherRepository extends JpaRepository<Weather, UUID>, WeatherRepository {
 
+    @Override
     @Query(value = "select w from Weather w where w.city.id =:cityId and w.dateTime between :from and :to")
     List<Weather> getByCityIdAndDateTimeBetween(UUID cityId, LocalDateTime from, LocalDateTime to);
 

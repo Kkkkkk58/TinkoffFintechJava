@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -28,6 +29,12 @@ public class JdbcCityRepository implements CityRepository {
     @Override
     public City getById(UUID cityId) {
         return jdbcTemplate.queryForObject("SELECT * FROM CITIES WHERE ID = ?", rowMapper, cityId);
+    }
+
+    @Override
+    public Optional<City> findByName(String name) {
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject("SELECT * FROM CITIES WHERE NAME = ? LIMIT 1", rowMapper, name));
     }
 
     @Override

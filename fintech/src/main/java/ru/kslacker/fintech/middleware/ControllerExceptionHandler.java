@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.kslacker.fintech.exceptions.CityAlreadyExistsException;
-import ru.kslacker.fintech.exceptions.CityNotFoundException;
-import ru.kslacker.fintech.exceptions.RemoteServiceUnavailableException;
-import ru.kslacker.fintech.exceptions.RemoteWeatherClientException;
+import ru.kslacker.fintech.exceptions.*;
 import ru.kslacker.fintech.response.ErrorResponse;
 
 @RestControllerAdvice
@@ -41,8 +38,14 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(RequestNotPermitted.class)
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public void handleRequestNotPermitted() {
-        handleException(new RemoteServiceUnavailableException());
+    public ErrorResponse handleRequestNotPermitted() {
+        return handleException(new RemoteServiceUnavailableException());
+    }
+
+    @ExceptionHandler(PersistenceException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ErrorResponse handlePersistenceException(PersistenceException exception) {
+        return handleException(exception);
     }
 
     private ErrorResponse handleException(Exception e) {

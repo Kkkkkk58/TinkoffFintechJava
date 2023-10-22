@@ -5,6 +5,8 @@ import ru.kslacker.fintech.dto.WeatherTypeInfoDto;
 
 public class WeatherTypeInfoMapper {
     public static WeatherTypeInfoDto asDto(WeatherTypeInfo weatherTypeInfo) {
-        return new WeatherTypeInfoDto(weatherTypeInfo.getType(), weatherTypeInfo.getIconUrl());
+        return weatherTypeInfo == null
+                ? null
+                : new WeatherTypeInfoDto(weatherTypeInfo.getType(), weatherTypeInfo.getIconUrl());
     }
 }
