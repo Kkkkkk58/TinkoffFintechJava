@@ -1,10 +1,10 @@
-package ru.kslacker.fintech.dataaccess;
+package ru.kslacker.fintech.dataaccess.repositories.implementation.inmemory;
 
 import org.springframework.stereotype.Repository;
-import ru.kslacker.fintech.dataaccess.api.CityRepository;
+import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.exceptions.CityAlreadyExistsException;
 import ru.kslacker.fintech.exceptions.CityNotFoundException;
-import ru.kslacker.fintech.models.City;
+import ru.kslacker.fintech.dataaccess.entities.City;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +19,8 @@ public class InMemoryCityRepository implements CityRepository {
     }
 
     @Override
-    public City createCity(City city) {
-        if (exists(city.getId())) {
+    public City save(City city) {
+        if (existsById(city.getId())) {
             throw new CityAlreadyExistsException(city.getId());
         }
 
@@ -29,7 +29,7 @@ public class InMemoryCityRepository implements CityRepository {
 
     @Override
     public City getById(UUID cityId) {
-        if (!exists(cityId)) {
+        if (!existsById(cityId)) {
             throw new CityNotFoundException(cityId);
         }
 
@@ -38,7 +38,7 @@ public class InMemoryCityRepository implements CityRepository {
 
     @Override
     public void deleteById(UUID cityId) {
-        if (!exists(cityId)) {
+        if (!existsById(cityId)) {
             throw new CityNotFoundException(cityId);
         }
 
@@ -46,7 +46,7 @@ public class InMemoryCityRepository implements CityRepository {
     }
 
     @Override
-    public boolean exists(UUID cityId) {
+    public boolean existsById(UUID cityId) {
         return cities.containsKey(cityId);
     }
 }

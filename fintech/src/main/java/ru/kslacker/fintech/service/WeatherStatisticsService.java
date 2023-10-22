@@ -1,7 +1,7 @@
 package ru.kslacker.fintech.service;
 
-import ru.kslacker.fintech.dataaccess.api.WeatherRepository;
-import ru.kslacker.fintech.models.Weather;
+import ru.kslacker.fintech.dataaccess.repositories.api.WeatherRepository;
+import ru.kslacker.fintech.dataaccess.entities.Weather;
 
 import java.util.List;
 import java.util.Map;

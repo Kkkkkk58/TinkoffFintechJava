@@ -1,12 +1,12 @@
-package ru.kslacker.fintech.dataaccess;
+package ru.kslacker.fintech.dataaccess.repositories.implementation.inmemory;
 
 import org.springframework.stereotype.Repository;
-import ru.kslacker.fintech.dataaccess.api.WeatherRepository;
+import ru.kslacker.fintech.dataaccess.entities.Weather;
+import ru.kslacker.fintech.dataaccess.repositories.api.WeatherRepository;
 import ru.kslacker.fintech.exceptions.CityAlreadyExistsException;
 import ru.kslacker.fintech.exceptions.CityNotFoundException;
-import ru.kslacker.fintech.models.Weather;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -24,12 +24,13 @@ public class InMemoryWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public List<Weather> getByCityAndDate(UUID cityId, LocalDate date) {
+    public List<Weather> getByCityIdAndDateTimeBetween(UUID cityId, LocalDateTime from, LocalDateTime to) {
         if (!existsByCity(cityId)) {
             throw new CityNotFoundException(cityId);
         }
 
-        return cityWeather.get(cityId).stream().filter(w -> date.isEqual(w.getDateTime().toLocalDate())).toList();
+        return cityWeather.get(cityId).stream().filter(w ->
+                (from.isBefore(w.getDateTime()) || from.isEqual(w.getDateTime())) && to.isAfter(w.getDateTime())).toList();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class InMemoryWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public void deleteByCity(UUID cityId) {
+    public void deleteByCityId(UUID cityId) {
         if (!existsByCity(cityId)) {
             throw new CityNotFoundException(cityId);
         }
