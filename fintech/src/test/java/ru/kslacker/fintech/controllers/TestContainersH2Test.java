@@ -1,7 +1,5 @@
 package ru.kslacker.fintech.controllers;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -29,15 +27,5 @@ public abstract class TestContainersH2Test {
 
     @Test
     public void contextLoads() {
-    }
-
-    @BeforeEach
-    public void setUp() {
-        h2.start();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        h2.stop();
     }
 }

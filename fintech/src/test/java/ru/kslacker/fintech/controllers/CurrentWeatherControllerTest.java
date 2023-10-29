@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
@@ -25,17 +26,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(
         properties = {
-                "resilience4j.ratelimiter.instances.remote-weather-service.limitForPeriod=5",
+                "resilience4j.ratelimiter.instances.remote-weather-service.limitForPeriod=10",
                 "resilience4j.ratelimiter.instances.remote-weather-service.limitRefreshPeriod=1s",
-                "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=250ms"
+                "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms"
         }
 )
 @AutoConfigureMockMvc
 @Testcontainers
+@Transactional
 public class CurrentWeatherControllerTest extends TestContainersH2Test {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
     private static final String CITY_NAME = "Moscow";
-    private static final int RATELIMITER_RPS = 5;
+    private static final int RATELIMITER_RPS = 10;
 
     @Autowired
     private MockMvc mockMvc;
