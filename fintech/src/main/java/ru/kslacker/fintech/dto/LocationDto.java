@@ -2,10 +2,12 @@ package ru.kslacker.fintech.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Builder
 public record LocationDto(
         String name,
         String region,

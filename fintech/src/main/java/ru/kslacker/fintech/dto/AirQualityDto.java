@@ -1,7 +1,9 @@
 package ru.kslacker.fintech.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
+@Builder
 public record AirQualityDto(
         double co,
         double no2,
