@@ -76,8 +76,8 @@ public class CityWeatherServiceImpl implements CityWeatherService {
         if (!cityRepository.existsById(cityId)) {
             throw new CityNotFoundException(cityId);
         }
-        cityRepository.deleteById(cityId);
         weatherRepository.deleteByCityId(cityId);
+        cityRepository.deleteById(cityId);
     }
 
     private List<Weather> createWeatherList(City city, List<CreateWeatherDto> weather) {
