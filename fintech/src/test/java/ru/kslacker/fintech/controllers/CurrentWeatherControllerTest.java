@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,8 +64,10 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
                     }
                 });
 
-        assertThat(responseStatusCount.keySet().size()).isEqualTo(2);
-        assertThat(responseStatusCount.keySet()).contains(HttpStatus.TOO_MANY_REQUESTS.value());
+        assertAll(
+                () -> assertThat(responseStatusCount.keySet().size()).isEqualTo(2),
+                () -> assertThat(responseStatusCount.keySet()).contains(HttpStatus.TOO_MANY_REQUESTS.value())
+        );
     }
 
     @Test
