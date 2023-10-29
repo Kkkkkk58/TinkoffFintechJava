@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="1697966779000" author="KarimKhasan">
+        <createIndex tableName="weather" indexName="weather_city_id_idx">
+            <column name="city_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1697966818000" author="KarimKhasan">
+        <createIndex tableName="weather" indexName="weather_city_id_date_time_idx">
+            <column name="city_id"/>
+            <column name="date_time"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1697978494479" author="KarimKhasan (generated)">
+        <addUniqueConstraint columnNames="name" constraintName="uc_cities_name" tableName="cities"/>
+    </changeSet>
+    <changeSet id="1697978494480" author="KarimKhasan (generated)">
+        <addUniqueConstraint columnNames="type" constraintName="uc_weather_type_type" tableName="weather_type"/>
+    </changeSet>
+</databaseChangeLog>

@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/schema.xml
   - include:
       file: db/changelog/changes/data.xml
+  - include:
+      file: db/changelog/changes/hw-5-add-index.xml

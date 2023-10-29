@@ -8,6 +8,7 @@ import ru.kslacker.fintech.dataaccess.entities.City;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -34,6 +35,13 @@ public class InMemoryCityRepository implements CityRepository {
         }
 
         return cities.get(cityId);
+    }
+
+    @Override
+    public Optional<City> findByName(String name) {
+        return cities.values().stream()
+                .filter(c -> c.getName().equals(name))
+                .findFirst();
     }
 
     @Override

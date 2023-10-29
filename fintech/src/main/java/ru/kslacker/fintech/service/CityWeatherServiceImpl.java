@@ -2,6 +2,7 @@ package ru.kslacker.fintech.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kslacker.fintech.dataaccess.entities.WeatherTypeInfo;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
@@ -30,6 +31,7 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     private final ValidationService validator;
 
     @Override
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
         return weatherRepository
                 .getByCityIdAndDateTimeBetween(cityId, date.atStartOfDay(), date.plusDays(1).atStartOfDay())
@@ -39,7 +41,7 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void createCity(UUID cityId, CreateCityDto createCityDto) {
         validator.validate(createCityDto);
         City city = cityRepository.save(new City(cityId, createCityDto.name()));
@@ -48,7 +50,7 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void updateWeather(UUID cityId, CreateWeatherDto createWeatherDto) {
         City city = cityRepository.getById(cityId);
         Weather weather = createWeather(city, createWeatherDto);
@@ -56,7 +58,7 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteCity(UUID cityId) {
         cityRepository.deleteById(cityId);
         weatherRepository.deleteByCityId(cityId);
