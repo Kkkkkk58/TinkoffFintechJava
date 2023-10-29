@@ -30,7 +30,8 @@ public interface SpringDataJpaWeatherRepository extends JpaRepository<Weather, U
     @Modifying
     @Query(value = """
             update Weather w
-            set w.temperatureValue = :#{#weather.getTemperatureValue()}
+            set w.temperatureValue = :#{#weather.getTemperatureValue()},
+                w.type.id = :#{#weather.getType().getId()}
             where w.city.id = :#{#weather.getCityId()}
                 and w.dateTime = :#{#weather.getDateTime()}
             """)
