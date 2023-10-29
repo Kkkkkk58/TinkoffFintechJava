@@ -31,7 +31,7 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     private final ValidationService validator;
 
     @Override
-    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
         return weatherRepository
                 .getByCityIdAndDateTimeBetween(cityId, date.atStartOfDay(), date.plusDays(1).atStartOfDay())
