@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(
         properties = {
-                "resilience4j.ratelimiter.instances.remote-weather-service.limitForPeriod=10",
+                "resilience4j.ratelimiter.instances.remote-weather-service.limitForPeriod=15",
                 "resilience4j.ratelimiter.instances.remote-weather-service.limitRefreshPeriod=1s",
                 "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms"
         }
