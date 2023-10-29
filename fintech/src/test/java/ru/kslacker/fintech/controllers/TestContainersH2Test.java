@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 
 @SpringBootTest
 public abstract class TestContainersH2Test {
+    private static final String CHANGELOG_MASTER_PATH = "db/changelog/db.changelog-master.yaml";
 
     @Container
     public static GenericContainer<?> h2 = new GenericContainer(DockerImageName.parse("oscarfonts/h2"))
@@ -44,7 +45,7 @@ public abstract class TestContainersH2Test {
         connection = DriverManager.getConnection(jdbcUrl, getDataSourceUsername(), getDataSourcePassword());
         Database database = new H2Database();
         database.setConnection(new JdbcConnection(connection));
-        liquibase = new Liquibase("db/changelog/db.changelog-master.yaml", new ClassLoaderResourceAccessor(), database);
+        liquibase = new Liquibase(CHANGELOG_MASTER_PATH, new ClassLoaderResourceAccessor(), database);
         liquibase.update("");
     }
 
