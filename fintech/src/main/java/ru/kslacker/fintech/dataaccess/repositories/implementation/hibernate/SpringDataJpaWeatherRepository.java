@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
 import ru.kslacker.fintech.dataaccess.repositories.api.WeatherRepository;
@@ -26,9 +27,14 @@ public interface SpringDataJpaWeatherRepository extends JpaRepository<Weather, U
     }
 
     @Override
-    default void updateWeather(Weather weather) {
-        save(weather);
-    }
+    @Modifying
+    @Query(value = """
+            update Weather w
+            set w.temperatureValue = :#{#weather.getTemperatureValue()}
+            where w.city.id = :#{#weather.getCityId()}
+                and w.dateTime = :#{#weather.getDateTime()}
+            """)
+    void updateWeather(@Param("weather") Weather weather);
 
     @Override
     @Modifying
