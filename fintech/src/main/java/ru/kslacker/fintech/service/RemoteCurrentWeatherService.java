@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.kslacker.fintech.config.RemoteWeatherServiceProperties;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
 import ru.kslacker.fintech.exceptions.NoRemoteServiceResponseException;
+import ru.kslacker.fintech.service.api.CurrentWeatherSaver;
 import ru.kslacker.fintech.service.api.CurrentWeatherService;
 
 @Service
@@ -15,9 +16,15 @@ public class RemoteCurrentWeatherService implements CurrentWeatherService {
 
     private final RemoteWeatherServiceProperties properties;
 
-    public RemoteCurrentWeatherService(WebClient webClient, RemoteWeatherServiceProperties properties) {
+    private final CurrentWeatherSaver saver;
+
+    public RemoteCurrentWeatherService(
+            WebClient webClient,
+            RemoteWeatherServiceProperties properties,
+            CurrentWeatherSaver saver) {
         this.webClient = webClient;
         this.properties = properties;
+        this.saver = saver;
     }
 
     @Override
@@ -37,6 +44,8 @@ public class RemoteCurrentWeatherService implements CurrentWeatherService {
         if (weatherInfoDto == null) {
             throw new NoRemoteServiceResponseException();
         }
+
+        saver.saveCurrentWeather(weatherInfoDto);
 
         return weatherInfoDto;
     }

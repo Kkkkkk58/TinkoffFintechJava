@@ -66,8 +66,8 @@ public class JdbcWeatherRepository implements WeatherRepository {
 
     @Override
     public void updateWeather(Weather weather) {
-        jdbcTemplate.update("UPDATE WEATHER SET TEMPERATURE_VALUE=?, DATE_TIME=?, TYPE_ID=?, CITY_ID=? WHERE ID=?",
-                weather.getTemperatureValue(), weather.getDateTime(), weather.getType().getId(), weather.getCityId(), weather.getId());
+        jdbcTemplate.update("MERGE INTO WEATHER KEY (ID) VALUES (?, ?, ?, ?, ?)",
+                weather.getId(), weather.getTemperatureValue(), weather.getDateTime(), weather.getType().getId(), weather.getCityId());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class WeatherTypeInfo {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private WeatherType type;
 
     private String iconUrl;

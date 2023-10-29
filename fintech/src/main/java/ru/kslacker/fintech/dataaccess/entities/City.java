@@ -20,6 +20,7 @@ public class City {
     @Id
     private UUID id;
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
