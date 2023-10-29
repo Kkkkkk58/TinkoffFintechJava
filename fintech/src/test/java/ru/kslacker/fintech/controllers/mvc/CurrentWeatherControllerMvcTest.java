@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest(CurrentWeatherController.class)
 public class CurrentWeatherControllerMvcTest {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
+    private static final String CITY_NAME = "Moscow";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -35,12 +37,10 @@ public class CurrentWeatherControllerMvcTest {
     @MockBean
     private CurrentWeatherService currentWeatherService;
 
-    private final String testCityName = "Moscow";
-
     @Test
     public void getCurrentWeather_validRequest_isOk() throws Exception {
         FullWeatherInfoDto response = getTestResponse();
-        given(currentWeatherService.getCurrentWeather(testCityName)).willReturn(response);
+        given(currentWeatherService.getCurrentWeather(CITY_NAME)).willReturn(response);
 
         MvcResult mvcResult = performGetRequest()
                 .andExpect(status().isOk())
@@ -108,13 +108,13 @@ public class CurrentWeatherControllerMvcTest {
 
     private ResultActions performGetRequest() throws Exception {
         return mockMvc.perform(get(API_CURRENT_WEATHER)
-                .param("location", testCityName));
+                .param("location", CITY_NAME));
     }
 
     private FullWeatherInfoDto getTestResponse() {
         return FullWeatherInfoDto.builder()
                 .location(LocationDto.builder()
-                        .region(testCityName)
+                        .region(CITY_NAME)
                         .build())
                 .current(CurrentWeatherDto.builder()
                         .tempCelsius(36.6)
