@@ -11,6 +11,8 @@ import ru.kslacker.fintech.dataaccess.repositories.api.WeatherTypeInfoRepository
 import ru.kslacker.fintech.dto.CreateCityDto;
 import ru.kslacker.fintech.dto.CreateWeatherDto;
 import ru.kslacker.fintech.dto.WeatherDto;
+import ru.kslacker.fintech.exceptions.CityAlreadyExistsException;
+import ru.kslacker.fintech.exceptions.CityNotFoundException;
 import ru.kslacker.fintech.mapping.WeatherMapper;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
@@ -33,6 +35,10 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
+        if (!cityRepository.existsById(cityId)) {
+            throw new CityNotFoundException(cityId);
+        }
+
         return weatherRepository
                 .getByCityIdAndDateTimeBetween(cityId, date.atStartOfDay(), date.plusDays(1).atStartOfDay())
                 .stream()
@@ -44,6 +50,10 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void createCity(UUID cityId, CreateCityDto createCityDto) {
         validator.validate(createCityDto);
+        if (cityRepository.existsById(cityId)) {
+            throw new CityAlreadyExistsException(cityId);
+        }
+
         City city = cityRepository.save(new City(cityId, createCityDto.name()));
         List<Weather> weather = createWeatherList(city, createCityDto.weather());
         weatherRepository.createForCity(cityId, weather);
@@ -52,6 +62,9 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void updateWeather(UUID cityId, CreateWeatherDto createWeatherDto) {
+        if (!cityRepository.existsById(cityId)) {
+            throw new CityNotFoundException(cityId);
+        }
         City city = cityRepository.getById(cityId);
         Weather weather = createWeather(city, createWeatherDto);
         weatherRepository.updateWeather(weather);
@@ -60,8 +73,11 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteCity(UUID cityId) {
-        cityRepository.deleteById(cityId);
+        if (!cityRepository.existsById(cityId)) {
+            throw new CityNotFoundException(cityId);
+        }
         weatherRepository.deleteByCityId(cityId);
+        cityRepository.deleteById(cityId);
     }
 
     private List<Weather> createWeatherList(City city, List<CreateWeatherDto> weather) {

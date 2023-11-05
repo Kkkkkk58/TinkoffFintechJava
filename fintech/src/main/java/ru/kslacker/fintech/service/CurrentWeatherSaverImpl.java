@@ -16,6 +16,7 @@ import ru.kslacker.fintech.service.api.CurrentWeatherSaver;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -46,7 +47,7 @@ public class CurrentWeatherSaverImpl implements CurrentWeatherSaver {
                 String cityName = fullWeatherInfoDto.location().name();
                 City city = cityRepository.findByName(cityName).orElseGet(() -> createCity(cityName));
                 Weather weather = getWeatherFromCurrentWeather(city, fullWeatherInfoDto.current());
-                weatherRepository.updateWeather(weather);
+                weatherRepository.createForCity(city.getId(), List.of(weather));
 
                 connection.commit();
             } catch (SQLException e) {

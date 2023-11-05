@@ -2,9 +2,11 @@ package ru.kslacker.fintech.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record CurrentWeatherDto(
         @JsonProperty("last_updated_epoch")
         int lastUpdatedEpoch,
