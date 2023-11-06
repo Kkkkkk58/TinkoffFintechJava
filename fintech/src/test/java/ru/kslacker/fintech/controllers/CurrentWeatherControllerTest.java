@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.kslacker.fintech.dataaccess.enums.UserRole;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
 
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @AutoConfigureMockMvc
 @Testcontainers
+@WithMockUser(UserRole.Code.ADMIN)
 public class CurrentWeatherControllerTest extends TestContainersH2Test {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
     private static final String CITY_NAME = "Moscow";

@@ -7,11 +7,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.kslacker.fintech.controllers.CityWeatherController;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
+import ru.kslacker.fintech.dataaccess.enums.UserRole;
 import ru.kslacker.fintech.dataaccess.enums.WeatherType;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.dataaccess.repositories.api.WeatherRepository;
@@ -40,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CityWeatherController.class)
 @SpyBean(CityWeatherServiceImpl.class)
+@WithMockUser(username = "admin", authorities = UserRole.Code.ADMIN)
 public class CityWeatherControllerMvcTest {
     private static final String CITY_WEATHER_API = "/api/weather";
     private static final UUID TEST_ID = UUID.randomUUID();

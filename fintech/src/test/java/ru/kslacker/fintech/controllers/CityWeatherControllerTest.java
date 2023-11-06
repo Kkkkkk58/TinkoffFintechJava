@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
+import ru.kslacker.fintech.dataaccess.enums.UserRole;
 import ru.kslacker.fintech.dataaccess.enums.WeatherType;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.dataaccess.repositories.api.WeatherRepository;
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
+@WithMockUser(UserRole.Code.ADMIN)
 public class CityWeatherControllerTest extends TestContainersH2Test {
     private static final String CITY_WEATHER_API = "/api/weather";
     private static final UUID TEST_ID = UUID.randomUUID();

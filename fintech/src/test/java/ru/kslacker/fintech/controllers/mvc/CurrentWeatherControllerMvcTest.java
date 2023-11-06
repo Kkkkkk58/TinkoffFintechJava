@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.kslacker.fintech.controllers.CurrentWeatherController;
+import ru.kslacker.fintech.dataaccess.enums.UserRole;
 import ru.kslacker.fintech.dto.CurrentWeatherDto;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
 import ru.kslacker.fintech.dto.LocationDto;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(CurrentWeatherController.class)
+@WithMockUser(username = "user", authorities = UserRole.Code.USER)
 public class CurrentWeatherControllerMvcTest {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
     private static final String CITY_NAME = "Moscow";
