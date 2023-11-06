@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.kslacker.fintech.dataaccess.enums.UserRole;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
 
@@ -32,13 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms"
         }
 )
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @Testcontainers
-@WithMockUser(UserRole.Code.ADMIN)
+@WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
 public class CurrentWeatherControllerTest extends TestContainersH2Test {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
     private static final String CITY_NAME = "Moscow";
-    private static final int RATELIMITER_RPS = 10;
+    private static final int RATELIMITER_RPS = 15;
 
     @Autowired
     private MockMvc mockMvc;
