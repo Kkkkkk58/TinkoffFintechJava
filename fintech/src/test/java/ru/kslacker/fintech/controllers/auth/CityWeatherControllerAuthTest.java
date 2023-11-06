@@ -7,10 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import ru.kslacker.fintech.dataaccess.enums.UserRole;
+import ru.kslacker.fintech.annotations.TestAsAdmin;
+import ru.kslacker.fintech.annotations.TestAsUser;
 import ru.kslacker.fintech.dataaccess.enums.WeatherType;
 import ru.kslacker.fintech.dto.CreateCityDto;
 import ru.kslacker.fintech.dto.CreateWeatherDto;
@@ -49,7 +49,7 @@ public class CityWeatherControllerAuthTest {
     }
 
     @Test
-    @WithMockUser(UserRole.Code.ADMIN)
+    @TestAsAdmin
     public void getWeather_isAdmin_isOk() throws Exception {
         given(service.getWeather(any(), any())).willReturn(List.of());
 
@@ -58,7 +58,7 @@ public class CityWeatherControllerAuthTest {
     }
 
     @Test
-    @WithMockUser(UserRole.Code.USER)
+    @TestAsUser
     public void getWeather_isUser_isOk() throws Exception {
         given(service.getWeather(any(), any())).willReturn(List.of());
 
@@ -73,14 +73,14 @@ public class CityWeatherControllerAuthTest {
     }
 
     @Test
-    @WithMockUser(UserRole.Code.ADMIN)
+    @TestAsAdmin
     public void createCity_isAdmin_isOk() throws Exception {
         performCreateCityRequest()
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(UserRole.Code.USER)
+    @TestAsUser
     public void createCity_isUser_isForbidden() throws Exception {
         performCreateCityRequest()
                 .andExpect(status().isForbidden());
@@ -93,14 +93,14 @@ public class CityWeatherControllerAuthTest {
     }
 
     @Test
-    @WithMockUser(UserRole.Code.ADMIN)
+    @TestAsAdmin
     public void updateWeather_isAdmin_isOk() throws Exception {
         performUpdateWeatherRequest()
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(UserRole.Code.USER)
+    @TestAsUser
     public void updateWeather_isUser_isForbidden() throws Exception {
         performUpdateWeatherRequest()
                 .andExpect(status().isForbidden());
@@ -113,14 +113,14 @@ public class CityWeatherControllerAuthTest {
     }
 
     @Test
-    @WithMockUser(UserRole.Code.ADMIN)
+    @TestAsAdmin
     public void deleteCity_isAdmin_isOk() throws Exception {
         performDeleteCityRequest()
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(UserRole.Code.USER)
+    @TestAsUser
     public void deleteCity_isUser_isForbidden() throws Exception {
         performDeleteCityRequest()
                 .andExpect(status().isForbidden());
