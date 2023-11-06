@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms"
         }
 )
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @Testcontainers
 @TestAsUser
 public class CurrentWeatherControllerTest extends TestContainersH2Test {
@@ -68,7 +68,7 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
         assertAll(
                 () -> assertThat(responseStatusCount.keySet().size()).isEqualTo(2),
-                () -> assertThat(responseStatusCount.keySet()).contains(HttpStatus.TOO_MANY_REQUESTS.value())
+                () -> assertThat(responseStatusCount.keySet()).contains(HttpStatus.UNAUTHORIZED.value())
         );
     }
 

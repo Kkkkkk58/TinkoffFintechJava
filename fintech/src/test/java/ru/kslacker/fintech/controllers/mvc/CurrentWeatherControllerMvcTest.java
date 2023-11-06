@@ -3,12 +3,13 @@ package ru.kslacker.fintech.controllers.mvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import ru.kslacker.fintech.annotations.TestAsUser;
 import ru.kslacker.fintech.controllers.CurrentWeatherController;
 import ru.kslacker.fintech.dto.CurrentWeatherDto;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
@@ -24,8 +25,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CurrentWeatherController.class)
-@TestAsUser
+@WebMvcTest(value = CurrentWeatherController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CurrentWeatherControllerMvcTest {
     private static final String API_CURRENT_WEATHER = "/api/weather/current";
     private static final String CITY_NAME = "Moscow";

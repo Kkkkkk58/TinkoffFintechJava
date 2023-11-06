@@ -3,13 +3,14 @@ package ru.kslacker.fintech.controllers.mvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.kslacker.fintech.annotations.TestAsAdmin;
 import ru.kslacker.fintech.controllers.CityWeatherController;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
@@ -39,9 +40,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CityWeatherController.class)
+@WebMvcTest(value = CityWeatherController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @SpyBean(CityWeatherServiceImpl.class)
-@TestAsAdmin
+@AutoConfigureMockMvc(addFilters = false)
 public class CityWeatherControllerMvcTest {
     private static final String CITY_WEATHER_API = "/api/weather";
     private static final UUID TEST_ID = UUID.randomUUID();
