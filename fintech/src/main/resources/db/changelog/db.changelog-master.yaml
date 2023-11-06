@@ -5,3 +5,7 @@ databaseChangeLog:
       file: db/changelog/changes/data.xml
   - include:
       file: db/changelog/changes/hw-5-add-index.xml
+  - include:
+      file: db/changelog/changes/hw-8-add-users-schema.xml
+  - include:
+      file: db/changelog/changes/hw-8-add-users-data.xml
