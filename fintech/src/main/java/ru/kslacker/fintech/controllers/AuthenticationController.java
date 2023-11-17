@@ -1,6 +1,5 @@
 package ru.kslacker.fintech.controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "register", consumes = "application/json", produces = "application/json")
-    public UserDto registerUser(@Valid @RequestBody UserModel userModel) {
+    public UserDto registerUser(@RequestBody UserModel userModel) {
         return userService.create(userModel.credentials());
     }
 }

@@ -5,9 +5,12 @@ import jakarta.validation.ConstraintValidatorContext;
 import ru.kslacker.fintech.validation.annotations.Password;
 
 public class PasswordValidator implements ConstraintValidator<Password, String> {
+    private static final int MIN_LENGTH = 8;
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return true;
+        return value != null
+                && !value.isBlank()
+                && value.length() >= MIN_LENGTH;
     }
 }

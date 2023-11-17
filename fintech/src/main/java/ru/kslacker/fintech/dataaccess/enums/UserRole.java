@@ -5,8 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 @AllArgsConstructor
 public enum UserRole implements GrantedAuthority {
-    ADMIN(Code.ADMIN),
-    USER(Code.USER);
+    ADMIN("ROLE_ADMIN"),
+    USER("ROLE_USER");
 
     private final String authority;
 
@@ -15,8 +15,4 @@ public enum UserRole implements GrantedAuthority {
         return authority;
     }
 
-    public static class Code {
-        public static final String ADMIN = "ROLE_ADMIN";
-        public static final String USER = "ROLE_USER";
-    }
 }
