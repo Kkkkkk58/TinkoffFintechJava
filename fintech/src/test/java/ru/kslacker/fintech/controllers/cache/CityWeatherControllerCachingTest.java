@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -18,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.kslacker.fintech.cache.CachingAspect;
 import ru.kslacker.fintech.cache.inmemory.InMemoryWeatherCacheRepository;
+import ru.kslacker.fintech.cache.inmemory.properties.InMemoryWeatherCacheRepositoryProperties;
 import ru.kslacker.fintech.controllers.CityWeatherController;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
@@ -41,7 +44,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CityWeatherController.class)
-@Import(CityWeatherControllerCachingConfig.class)
+@Import({
+        AopAutoConfiguration.class,
+        CachingAspect.class,
+        InMemoryWeatherCacheRepository.class,
+        InMemoryWeatherCacheRepositoryProperties.class
+})
 @MockBean({WeatherTypeInfoRepository.class, ValidationService.class, WeatherTypeInfoRepository.class})
 @SpyBean(CityWeatherServiceImpl.class)
 public class CityWeatherControllerCachingTest {
