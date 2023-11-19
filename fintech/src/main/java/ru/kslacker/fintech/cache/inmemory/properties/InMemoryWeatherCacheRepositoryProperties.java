@@ -12,5 +12,5 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 public class InMemoryWeatherCacheRepositoryProperties {
     @Min(0)
-    private int size;
+    private int size = 14;
 }
