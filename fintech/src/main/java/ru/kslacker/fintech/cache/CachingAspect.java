@@ -22,17 +22,17 @@ public class CachingAspect {
         this.cache = cache;
     }
 
-    @Pointcut("within(ru.kslacker.fintech.controllers.CityWeatherController)")
-    protected void weatherControllerPointcut() {
+    @Pointcut("within(ru.kslacker.fintech.service.api.CityWeatherService+)")
+    protected void weatherServicePointcut() {
 
     }
 
-    @Pointcut("weatherControllerPointcut() && execution(* getWeather(..))")
+    @Pointcut("weatherServicePointcut() && execution(* getWeather(..))")
     protected void getWeatherRequestPointcut() {
 
     }
 
-    @Pointcut("weatherControllerPointcut() && execution(* updateWeather(..))")
+    @Pointcut("weatherServicePointcut() && execution(* updateWeather(..))")
     protected void updateWeatherRequestPointcut() {
 
     }
