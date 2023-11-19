@@ -11,9 +11,11 @@ import ru.kslacker.fintech.dto.WeatherDto;
 @Repository
 public class InMemoryWeatherCacheRepository implements WeatherCacheRepository {
 
-    private final LRUCache<WeatherRequestCacheKey, List<WeatherDto>> cache;
+    private final InMemoryWeatherCacheRepositoryProperties properties;
+    private LRUCache<WeatherRequestCacheKey, List<WeatherDto>> cache;
 
     public InMemoryWeatherCacheRepository(InMemoryWeatherCacheRepositoryProperties properties) {
+        this.properties = properties;
         this.cache = new LRUCache<>(properties.getSize());
     }
 
@@ -30,6 +32,11 @@ public class InMemoryWeatherCacheRepository implements WeatherCacheRepository {
     @Override
     public void invalidate(WeatherRequestCacheKey key) {
         cache.remove(key);
+    }
+
+    @Override
+    public void clear() {
+        this.cache = new LRUCache<>(properties.getSize());
     }
 
 }

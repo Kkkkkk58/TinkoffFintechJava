@@ -8,4 +8,5 @@ public interface WeatherCacheRepository {
     List<WeatherDto> get(WeatherRequestCacheKey key);
     void put(WeatherRequestCacheKey key, List<WeatherDto> value);
     void invalidate(WeatherRequestCacheKey key);
+    void clear();
 }
