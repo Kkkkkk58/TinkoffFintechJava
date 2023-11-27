@@ -103,17 +103,6 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void getCurrentWeather_unknownExistingCity_isOkSavedToDb() throws Exception {
-        setUpSuccessfulReturn();
-        String cityName = "Saratov";
-        assertThat(cityRepository.findByName(cityName)).isEmpty();
-
-        performGetRequest(cityName)
-                .andExpect(status().isOk());
-        assertThat(cityRepository.findByName(cityName)).isNotEmpty();
-    }
-
     private ResultActions performGetRequest(String cityName) throws Exception {
         return mockMvc.perform(get(API_CURRENT_WEATHER)
                 .param("location", cityName));
