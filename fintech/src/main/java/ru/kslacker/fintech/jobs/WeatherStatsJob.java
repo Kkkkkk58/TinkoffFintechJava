@@ -36,7 +36,7 @@ public class WeatherStatsJob {
                 .toList();
     }
 
-    @Scheduled(cron = "${weather.stats.cron:*/10 * * * * *}")
+    @Scheduled(cron = "${weather.stats.cron:0 0 * * * *}")
     public void computeStats() {
         for (UUID id : cityIds) {
             List<WeatherDto> weather = cityWeatherService.getWeather(id, LocalDate.now());
