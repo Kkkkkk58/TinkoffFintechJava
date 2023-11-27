@@ -28,8 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         properties = {
                 "resilience4j.ratelimiter.instances.remote-weather-service.limitForPeriod=15",
                 "resilience4j.ratelimiter.instances.remote-weather-service.limitRefreshPeriod=1s",
-                "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms",
-                "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
+                "resilience4j.ratelimiter.instances.remote-weather-service.timeoutDuration=10ms"
         }
 )
 @AutoConfigureMockMvc
