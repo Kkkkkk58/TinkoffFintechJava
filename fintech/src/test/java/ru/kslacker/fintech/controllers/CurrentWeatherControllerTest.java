@@ -1,7 +1,10 @@
 package ru.kslacker.fintech.controllers;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,11 +22,8 @@ import ru.kslacker.fintech.dto.ConditionDto;
 import ru.kslacker.fintech.dto.CurrentWeatherDto;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
 import ru.kslacker.fintech.dto.LocationDto;
+import ru.kslacker.fintech.exceptions.RemoteServiceLocationNotFoundException;
 import ru.kslacker.fintech.service.api.CurrentWeatherService;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,21 +60,9 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
     @MockBean
     private CurrentWeatherService currentWeatherService;
 
-    @BeforeEach
-    public void setUp() {
-        given(currentWeatherService.getCurrentWeather(anyString())).willReturn(
-                FullWeatherInfoDto.builder()
-                        .location(LocationDto.builder().build())
-                        .current(CurrentWeatherDto.builder()
-                                        .condition(ConditionDto.builder().build())
-                                        .airQuality(AirQualityDto.builder().build())
-                                .build())
-                        .build()
-        );
-    }
-
     @Test
     public void getCurrentWeather_exceedingRps_isTooManyRequests() {
+        setUpSuccessfulReturn();
         Map<Integer, Integer> responseStatusCount = new ConcurrentHashMap<>(RATELIMITER_RPS * 2);
 
         IntStream.rangeClosed(0, RATELIMITER_RPS * 2)
@@ -99,6 +87,7 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Test
     public void getCurrentWeather_existingIRLCity_isOkReturnsWeather() throws Exception {
+        setUpSuccessfulReturn();
         MvcResult mvcResult = performGetRequest(CITY_NAME)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -109,12 +98,14 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Test
     public void getCurrentWeather_nonExistentIRLCity_isNotFound() throws Exception {
+        setUpUnsuccessfulReturn();
         performGetRequest("TestCity")
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getCurrentWeather_unknownExistingCity_isOkSavedToDb() throws Exception {
+        setUpSuccessfulReturn();
         String cityName = "Saratov";
         assertThat(cityRepository.findByName(cityName)).isEmpty();
 
@@ -126,5 +117,21 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
     private ResultActions performGetRequest(String cityName) throws Exception {
         return mockMvc.perform(get(API_CURRENT_WEATHER)
                 .param("location", cityName));
+    }
+
+    private void setUpSuccessfulReturn() {
+        given(currentWeatherService.getCurrentWeather(anyString())).willReturn(
+                FullWeatherInfoDto.builder()
+                        .location(LocationDto.builder().build())
+                        .current(CurrentWeatherDto.builder()
+                                .condition(ConditionDto.builder().build())
+                                .airQuality(AirQualityDto.builder().build())
+                                .build())
+                        .build()
+        );
+    }
+
+    private void setUpUnsuccessfulReturn() {
+        given(currentWeatherService.getCurrentWeather(anyString())).willThrow(new RemoteServiceLocationNotFoundException());
     }
 }
