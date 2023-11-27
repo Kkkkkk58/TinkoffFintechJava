@@ -1,10 +1,12 @@
 package ru.kslacker.fintech.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -12,7 +14,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.kslacker.fintech.annotations.TestAsUser;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
+import ru.kslacker.fintech.dto.AirQualityDto;
+import ru.kslacker.fintech.dto.ConditionDto;
+import ru.kslacker.fintech.dto.CurrentWeatherDto;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
+import ru.kslacker.fintech.dto.LocationDto;
+import ru.kslacker.fintech.service.api.CurrentWeatherService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +28,8 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +56,22 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Autowired
     private CityRepository cityRepository;
+
+    @MockBean
+    private CurrentWeatherService currentWeatherService;
+
+    @BeforeEach
+    public void setUp() {
+        given(currentWeatherService.getCurrentWeather(anyString())).willReturn(
+                FullWeatherInfoDto.builder()
+                        .location(LocationDto.builder().build())
+                        .current(CurrentWeatherDto.builder()
+                                        .condition(ConditionDto.builder().build())
+                                        .airQuality(AirQualityDto.builder().build())
+                                .build())
+                        .build()
+        );
+    }
 
     @Test
     public void getCurrentWeather_exceedingRps_isTooManyRequests() {
