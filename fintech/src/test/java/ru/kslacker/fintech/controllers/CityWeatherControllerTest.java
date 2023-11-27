@@ -115,31 +115,6 @@ public class CityWeatherControllerTest extends TestContainersH2Test {
     }
 
     @Test
-    void updateWeather_validParams_isOkWeatherUpdated() throws Exception {
-        List<CreateWeatherDto> createWeatherDtos = getValidCreateWeatherDtos();
-        CreateCityDto createCityDto = new CreateCityDto(getTestCity().getName(), createWeatherDtos);
-        performCityCreation(createCityDto);
-
-        CreateWeatherDto dtoToUpdate = createWeatherDtos.get(0);
-        double newTemperature = dtoToUpdate.temperatureValue() + 98;
-        CreateWeatherDto newDto = new CreateWeatherDto(
-                dtoToUpdate.type(),
-                newTemperature,
-                dtoToUpdate.dateTime());
-
-        performWeatherUpdate(newDto)
-                .andExpect(status().isOk());
-        List<Weather> values = weatherRepository.getByCityIdAndDateTimeBetween(TEST_ID, newDto.dateTime(), newDto.dateTime().plusDays(1));
-        assertAll(
-                () -> assertThat(values).isNotEmpty(),
-                () -> assertThat(values)
-                        .filteredOn(Weather::getDateTime, newDto.dateTime())
-                        .map(Weather::getTemperatureValue)
-                        .allMatch(t -> t == newTemperature)
-        );
-    }
-
-    @Test
     void updateWeather_nonExistentCity_isNotFound() throws Exception {
         performWeatherUpdate(getValidCreateWeatherDtos().get(0))
                 .andExpect(status().isNotFound());

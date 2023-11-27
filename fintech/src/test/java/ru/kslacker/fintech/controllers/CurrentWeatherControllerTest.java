@@ -105,7 +105,6 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Test
     public void getCurrentWeather_unknownExistingCity_isOkSavedToDb() throws Exception {
-        setUpSuccessfulReturn();
         String cityName = "Saratov";
         assertThat(cityRepository.findByName(cityName)).isEmpty();
 
