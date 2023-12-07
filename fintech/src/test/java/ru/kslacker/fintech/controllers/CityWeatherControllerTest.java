@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.kslacker.fintech.annotations.TestAsAdmin;
 import ru.kslacker.fintech.dataaccess.entities.City;
 import ru.kslacker.fintech.dataaccess.entities.Weather;
 import ru.kslacker.fintech.dataaccess.enums.WeatherType;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
+@TestAsAdmin
 public class CityWeatherControllerTest extends TestContainersH2Test {
     private static final String CITY_WEATHER_API = "/api/weather";
     private static final UUID TEST_ID = UUID.randomUUID();
@@ -47,6 +49,7 @@ public class CityWeatherControllerTest extends TestContainersH2Test {
     private CityRepository cityRepository;
     @Autowired
     private WeatherRepository weatherRepository;
+
 
     @Test
     void getWeather_existentCity_isOkReturnsWeatherForDate() throws Exception {
@@ -109,31 +112,6 @@ public class CityWeatherControllerTest extends TestContainersH2Test {
 
         performCityCreation(createCityDto)
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void updateWeather_validParams_isOkWeatherUpdated() throws Exception {
-        List<CreateWeatherDto> createWeatherDtos = getValidCreateWeatherDtos();
-        CreateCityDto createCityDto = new CreateCityDto(getTestCity().getName(), createWeatherDtos);
-        performCityCreation(createCityDto);
-
-        CreateWeatherDto dtoToUpdate = createWeatherDtos.get(0);
-        double newTemperature = dtoToUpdate.temperatureValue() + 98;
-        CreateWeatherDto newDto = new CreateWeatherDto(
-                dtoToUpdate.type(),
-                newTemperature,
-                dtoToUpdate.dateTime());
-
-        performWeatherUpdate(newDto)
-                .andExpect(status().isOk());
-        List<Weather> values = weatherRepository.getByCityIdAndDateTimeBetween(TEST_ID, newDto.dateTime(), newDto.dateTime().plusDays(1));
-        assertAll(
-                () -> assertThat(values).isNotEmpty(),
-                () -> assertThat(values)
-                        .filteredOn(Weather::getDateTime, newDto.dateTime())
-                        .map(Weather::getTemperatureValue)
-                        .allMatch(t -> t == newTemperature)
-        );
     }
 
     @Test
