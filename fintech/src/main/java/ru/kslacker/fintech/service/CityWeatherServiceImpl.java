@@ -1,6 +1,7 @@
 package ru.kslacker.fintech.service;
 
 import lombok.AllArgsConstructor;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,10 @@ public class CityWeatherServiceImpl implements CityWeatherService {
     private final WeatherTypeInfoRepository weatherTypeInfoRepository;
     private final ValidationService validator;
 
+    /**
+     * Задействует кэш, если возможно
+     * @see ru.kslacker.fintech.cache.CachingAspect#tryGetFromCache(ProceedingJoinPoint)
+     */
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<WeatherDto> getWeather(UUID cityId, LocalDate date) {
@@ -59,6 +64,10 @@ public class CityWeatherServiceImpl implements CityWeatherService {
         weatherRepository.createForCity(cityId, weather);
     }
 
+    /**
+     * Инвалидирует кэш
+     * @see ru.kslacker.fintech.cache.CachingAspect#invalidateCacheOnUpdate(UUID, CreateWeatherDto)
+     */
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void updateWeather(UUID cityId, CreateWeatherDto createWeatherDto) {

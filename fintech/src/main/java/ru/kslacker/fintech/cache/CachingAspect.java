@@ -15,6 +15,9 @@ import ru.kslacker.fintech.dto.WeatherDto;
 
 @Component
 @Aspect
+/**
+ * Аспект используется для кэширования результатов запросов в CityWeatherService
+ */
 public class CachingAspect {
     private final WeatherCacheRepository cache;
 
@@ -37,6 +40,13 @@ public class CachingAspect {
 
     }
 
+    /**
+     * Пытаемся достать из кэша погоду по городу и дате. Если в кэше есть значение, отдаем его,
+     * иначе - продолжаем поход в сервис
+     * @param pjp JoinPoint
+     * @return объекты погоды
+     * @throws Throwable pjp.proceed() может выбрасывать исключение
+     */
     @Around(value = "getWeatherRequestPointcut()")
     public Object tryGetFromCache(ProceedingJoinPoint pjp) throws Throwable {
         WeatherRequestCacheKey key = getKeyFromGetRequestJoinPoint(pjp);
@@ -55,6 +65,11 @@ public class CachingAspect {
         return value;
     }
 
+    /**
+     * Когда значение обновляется вручную, кэш инвалидируется, чтобы не отдавать неконсистентные данные
+     * @param cityId идентификатор города
+     * @param createWeatherDto моделька для создания объекта погоды
+     */
     @AfterReturning(
             value = "updateWeatherRequestPointcut() && args(cityId, createWeatherDto, ..)",
             argNames = "cityId, createWeatherDto"
