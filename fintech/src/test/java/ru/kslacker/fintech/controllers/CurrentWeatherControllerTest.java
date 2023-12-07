@@ -1,10 +1,15 @@
 package ru.kslacker.fintech.controllers;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -12,15 +17,19 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.kslacker.fintech.annotations.TestAsUser;
 import ru.kslacker.fintech.dataaccess.repositories.api.CityRepository;
+import ru.kslacker.fintech.dto.AirQualityDto;
+import ru.kslacker.fintech.dto.ConditionDto;
+import ru.kslacker.fintech.dto.CurrentWeatherDto;
 import ru.kslacker.fintech.dto.FullWeatherInfoDto;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.IntStream;
+import ru.kslacker.fintech.dto.LocationDto;
+import ru.kslacker.fintech.exceptions.RemoteServiceLocationNotFoundException;
+import ru.kslacker.fintech.service.api.CurrentWeatherService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,8 +57,12 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
     @Autowired
     private CityRepository cityRepository;
 
+    @MockBean
+    private CurrentWeatherService currentWeatherService;
+
     @Test
     public void getCurrentWeather_exceedingRps_isTooManyRequests() {
+        setUpSuccessfulReturn();
         Map<Integer, Integer> responseStatusCount = new ConcurrentHashMap<>(RATELIMITER_RPS * 2);
 
         IntStream.rangeClosed(0, RATELIMITER_RPS * 2)
@@ -74,6 +87,7 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Test
     public void getCurrentWeather_existingIRLCity_isOkReturnsWeather() throws Exception {
+        setUpSuccessfulReturn();
         MvcResult mvcResult = performGetRequest(CITY_NAME)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -84,6 +98,7 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
 
     @Test
     public void getCurrentWeather_nonExistentIRLCity_isNotFound() throws Exception {
+        setUpUnsuccessfulReturn();
         performGetRequest("TestCity")
                 .andExpect(status().isNotFound());
     }
@@ -91,5 +106,21 @@ public class CurrentWeatherControllerTest extends TestContainersH2Test {
     private ResultActions performGetRequest(String cityName) throws Exception {
         return mockMvc.perform(get(API_CURRENT_WEATHER)
                 .param("location", cityName));
+    }
+
+    private void setUpSuccessfulReturn() {
+        given(currentWeatherService.getCurrentWeather(anyString())).willReturn(
+                FullWeatherInfoDto.builder()
+                        .location(LocationDto.builder().build())
+                        .current(CurrentWeatherDto.builder()
+                                .condition(ConditionDto.builder().build())
+                                .airQuality(AirQualityDto.builder().build())
+                                .build())
+                        .build()
+        );
+    }
+
+    private void setUpUnsuccessfulReturn() {
+        given(currentWeatherService.getCurrentWeather(anyString())).willThrow(new RemoteServiceLocationNotFoundException());
     }
 }
